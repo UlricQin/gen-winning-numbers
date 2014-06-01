@@ -1,0 +1,17 @@
+<strong>{{.DuoYuan.DirName}}的记忆：</strong>
+<hr style="margin-top: 10px; margin-bottom: 10px;">
+<ul class="unstyled">
+    {{range $jy_dir, $jy := .DuoYuan.JiYiList}}
+    <li>
+        <input onchange="ji_yi_checked('{{$.DuoYuan.DirName}}', '{{$jy_dir}}', this.checked);" type="checkbox" {{if compare $jy.Checked 1}}checked{{end}}>
+        <a href="javascript:load_da_di_list_of('{{$.DuoYuan.DirName}}', '{{$jy_dir}}');">{{$jy_dir}}</a>
+    </li>
+    {{end}}
+</ul>
+<hr style="margin-top: 10px; margin-bottom: 10px;">
+<div id="jyrc">
+    容错：
+    <input onblur="update_ji_yi_rong_cuo('min', this.value, '{{$.DuoYuan.DirName}}');" value="{{.DuoYuan.RongCuoMin}}" style="width: 20px;">
+    -
+    <input onblur="update_ji_yi_rong_cuo('max', this.value, '{{$.DuoYuan.DirName}}');" value="{{.DuoYuan.RongCuoMax}}" style="width: 20px;">
+</div>

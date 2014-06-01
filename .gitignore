@@ -1,0 +1,9 @@
+*.swp
+gen-winning-numbers.exe
+winning-numbers.exe
+gen-winning-numbers.exe~
+winning-numbers.exe~
+gen-winning-numbers
+winning-numbers
+.idea
+cfg.json

@@ -1,0 +1,102 @@
+<div class="mt10 mb15">
+    <div>
+        <span>全局目录：</span>
+        <input class="mt10" type="text" id="base_dir" style="width: 400px;" value="{{.Global.BaseDir}}">
+        <button class="btn" onclick="reset_cfg();">搜索磁盘上的大底</button>
+        <button class="btn" onclick="save_cfg();">保存所有配置到磁盘</button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- duo yuan list -->
+    <div class="span2">
+        <div id="dyl" class="thin-border">
+            <strong>多元列表：</strong>
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <ul class="unstyled">
+                {{range $dy_dir, $dy := .Global.DuoYuanList}}
+                <li>
+                    <input type="checkbox" v="{{$dy_dir}}" {{if compare $dy.Checked 1}}checked{{end}}>
+                    <a href="javascript:load_ji_yi_list_of('{{$dy_dir}}');">{{$dy_dir}}</a>
+                </li>
+                {{end}}
+            </ul>
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <div id="dyrc">
+                容错：
+                <input value="{{.Global.DuoYuanRongCuoMin}}" style="width: 20px;" t='min'>
+                -
+                <input value="{{.Global.DuoYuanRongCuoMax}}" style="width: 20px;" t='max'>
+            </div>
+        </div>
+
+        <div class="thin-border mt10">
+            <strong>新建一个多元</strong>
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <input style="width: 40px;" id="scope_min"> - <input style="width: 40px;" id="scope_max">
+            <p class="mt10">
+                <button style="width: 106px;" class="btn" onclick="new_duo_yuan();" id="new_duo_yuan_btn">创建多元</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- ji yi list -->
+    <div class="span3">
+        <div id="jyl" class="thin-border">
+            点击左侧多元显示记忆
+        </div>
+    </div>
+
+    <!-- da di list -->
+    <div class="span4">
+        <!--<div class="thin-border mb10">-->
+        <!--名称：<input id="new_dd_name" style="width: 85px;"> 期数：<input id="new_dd_search_num" style="width: 85px;"> <button onclick="new_da_di();" class="btn">新增</button>-->
+        <!--</div>-->
+        <div id="ddl" class="thin-border">
+            点击左侧记忆显示大底
+        </div>
+    </div>
+
+    <div class="span3">
+        <div id="jhl" class="thin-border">
+            <strong>历史奖号：</strong>
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <div style="height: 35px;">
+                上二期：<input style="width: 80px;" id="last2" onblur="update_winning_number('2', this.value);" value="{{.Global.Last2}}">
+            </div>
+            <div style="height: 35px;">
+                上一期：<input style="width: 80px;" id="last1" onblur="update_winning_number('1', this.value);" value="{{.Global.Last1}}">
+            </div>
+
+            <p class="mt10">
+                <button class="btn" onclick="compute();" id="model2_btn">模式二计算</button>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span12 thin-border mt15">
+        <strong>下面显示结果</strong>
+        <hr style="margin-top: 10px; margin-bottom: 10px;">
+        <textarea style="width: 98%; height: 400px;" id="result"></textarea>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#dyl input[type=checkbox]").click(function () {
+            var checked = this.checked ? '1' : '0';
+//            console.log("checked:"+checked+", v:"+$(this).attr('v'))
+            $.get('{{urlfor "AdminController.UpdateDuoYuanChecked" }}', {'checked': checked, 'dir': $(this).attr('v')}, function (msg) {
+                err_msg(msg);
+            });
+        });
+
+        $("#dyrc input[t]").blur(function () {
+            $.get('{{urlfor "AdminController.UpdateDuoYuanRongCuo" }}', {'val': $(this).val(), 't': $(this).attr('t')}, function (msg) {
+                err_msg(msg);
+            });
+        });
+    });
+</script>

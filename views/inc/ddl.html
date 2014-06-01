@@ -1,0 +1,22 @@
+<strong><span id="tit_dy">{{$.DuoYuan.DirName}}</span>»<span id="tit_jy">{{$.JiYi.DirName}}</span>的大底：</strong>
+<hr style="margin-top: 10px; margin-bottom: 10px;">
+<ul class="unstyled">
+    {{range $dd_name, $dd := $.JiYi.DaDiList}}
+    <li style="height: 40px;">
+        <input onchange="da_di_checked('{{$.DuoYuan.DirName}}', '{{$.JiYi.DirName}}', '{{$dd_name}}', this.checked);"
+               type="checkbox" {{if compare $dd.Checked 1}}checked{{end}}>
+        {{$dd_name}} - 搜索：
+        <input style="width: 40px; height: 20px;" value="{{$dd.SearchNum}}"
+               onblur="update_search_num('{{$.DuoYuan.DirName}}', '{{$.JiYi.DirName}}', '{{$dd_name}}', this.value);">
+    </li>
+    {{end}}
+</ul>
+<hr style="margin-top: 10px; margin-bottom: 10px;">
+<div id="ddrc">
+    容错：
+    <input onblur="update_da_di_rong_cuo('min', this.value, '{{$.JiYi.DirName}}', '{{$.DuoYuan.DirName}}');"
+           value="{{$.JiYi.RongCuoMin}}" style="width: 20px;">
+    -
+    <input onblur="update_da_di_rong_cuo('max', this.value, '{{$.JiYi.DirName}}', '{{$.DuoYuan.DirName}}');"
+           value="{{$.JiYi.RongCuoMax}}" style="width: 20px;">
+</div>

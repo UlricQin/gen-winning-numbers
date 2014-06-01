@@ -1,0 +1,110 @@
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+    function reset() {
+        var base_dir = $("#base_dir").val();
+        if (base_dir.length == 0) {
+            err_msg('全局目录没有配置呢……', function () {
+                $("#base_dir").focus();
+            });
+        } else {
+            window.location.href = "/admin/config/reset?dir=" + base_dir;
+        }
+    }
+
+    function save() {
+
+    }
+
+</script>
+
+<div class="mt10 mb15">
+    <div>
+        <span>全局目录：</span>
+        <input class="mt10" type="text" id="base_dir" style="width: 400px;" value="{{.BaseDir}}">
+        <button class="btn" onclick="reset();">重置所有配置</button>
+    </div>
+</div>
+
+<div class="accordion" id="duo_yuan_list">
+    {{range $dir, $dy := .Global.DuoYuanList}}
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#duo_yuan_list" href="#dy_{{$dir}}">
+                {{$dir}}
+            </a>
+        </div>
+        <div id="dy_{{$dir}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div>
+                    <input type="checkbox" value="{{$dir}}">
+                    使用该多元做计算，
+                    记忆之间的容错设置：
+                    <input value="{{$dy.RongCuoMin}}" style="width: 20px;" t='min' dy='{{$dir}}'>
+                    -
+                    <input value="{{$dy.RongCuoMax}}" style="width: 20px;" t='max' dy='{{$dir}}'>
+                </div>
+
+                <!-- jiyi -->
+                <div class="accordion" id="jyl_{{$dir}}">
+                    {{range $jy_dir, $jy := $dy.JiYiList}}
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#jyl_{{$dir}}"
+                               href="#{{$dir}}_jy_{{$jy_dir}}">
+                                {{$jy_dir}}
+                            </a>
+                        </div>
+                        <div id="{{$dir}}_jy_{{$jy_dir}}" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <div>
+                                    <input type="checkbox" value="{{$jy_dir}}">
+                                    使用该记忆做计算，
+                                    智能大底之间的容错设置：
+                                    <input value="{{$jy.RongCuoMin}}" style="width: 20px;" t='min' jy='{{$jy_dir}}'>
+                                    -
+                                    <input value="{{$jy.RongCuoMax}}" style="width: 20px;" t='max' jy='{{$jy_dir}}'>
+                                </div>
+                                <!-- dadi -->
+                                <!-- /dadi -->
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+                <!-- /jiyi -->
+
+            </div>
+        </div>
+    </div>
+    {{end}}
+</div>
+
+<div id="duo_yuan_rc">
+    多元之间的容错设置：
+    <input value="{{.Global.DuoYuanRongCuoMin}}" style="width: 20px;" t='min'>
+    -
+    <input value="{{.Global.DuoYuanRongCuoMax}}" style="width: 20px;" t='max'>
+    <button class="btn pull-right" onclick="save();">保存所有配置到磁盘</button>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#duo_yuan_rc input[t]").blur(function () {
+            $.get('{{urlfor "AdminController.UpdateDuoYuanRongCuo" }}', {'val': $(this).val(), 't': $(this).attr('t')}, function (msg) {
+                if (msg.length != 0) {
+                    err_msg(msg);
+                }
+            });
+        });
+
+        $("#duo_yuan_list input[t]").blur(function () {
+            $.get('{{urlfor "AdminController.UpdateJiYiRongCuo" }}', {'val': $(this).val(), 't': $(this).attr('t'), 'dy': $(this).attr('dy')}, function (msg) {
+                if (msg.length != 0) {
+                    err_msg(msg);
+                }
+            });
+        });
+    });
+</script>

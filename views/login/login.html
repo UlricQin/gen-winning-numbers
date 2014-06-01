@@ -1,0 +1,74 @@
+<style type="text/css">
+    #screen {
+        margin: 0 auto;
+        width: 310px;
+    }
+
+    body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+    }
+
+    .line {
+        height: 40px;
+    }
+
+</style>
+<div class="thin-border" style="background-color: #ffffff; padding:20px;">
+    <strong>
+        <i class="icon-user"></i> 登录
+    </strong>
+    <hr style="margin-top: 12px; margin-bottom: 12px;">
+    <div class="line">
+        <span>账号：</span>
+        <input class="mt10" id="name" type="text" placeholder="username">
+    </div>
+    <div class="line">
+        <span>密码：</span>
+        <input class="mt10" type="password" placeholder="password" id="pwd">
+    </div>
+    <div class="line mt10">
+        <input type="button" class="btn" style="margin-left: 46px;" value="登录" onclick="login();">
+    </div>
+</div>
+
+<script type="text/javascript" src="/static/js/md5.js"></script>
+<script type="text/javascript">
+    function login() {
+        var name = $("#name").val();
+        var pwd = $("#pwd").val();
+        if (name.length == 0) {
+            err_msg('用户名不能为空', function () {
+                $("#name").focus();
+            });
+            return false;
+        }
+
+        if (pwd.length == 0) {
+            err_msg('密码不能为空', function () {
+                $("#pwd").focus();
+            });
+            return false;
+        }
+
+        $.post('{{urlfor "LoginController.DoLogin"}}', {"name": name, "pwd": CryptoJS.MD5(pwd) + ''}, function (msg) {
+            chk_msg(msg, function () {
+                window.location.href = '/';
+            });
+        });
+    }
+
+    $(function () {
+        $("#name").keypress(function (e) {
+            if (e.keyCode == 13) {
+                login();
+            }
+        });
+        $("#pwd").keypress(function (e) {
+            if (e.keyCode == 13) {
+                login();
+            }
+        });
+    });
+</script>
